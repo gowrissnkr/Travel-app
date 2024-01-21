@@ -3,6 +3,7 @@ import { carsData } from "../constants/data";
 import { useForm } from "../hooks/useForm";
 import Input from "./Input";
 import Destination from "./Destination";
+import Type from "./Type";
 
 const PickUp = () => {
   const { handleSelectCarType, formData, handleChange, handleSubmit } =
@@ -27,7 +28,7 @@ const PickUp = () => {
           </div>
         </div>
       </div>
-      <div className="w-[full] mt-[10px] px-[10px] ">
+      <div className="w-[full] mt-[20px] px-[10px] ">
         <form onSubmit={handleSubmit}>
           <Input
             label="Name"
@@ -48,7 +49,18 @@ const PickUp = () => {
             name="phone"
           />
           <Destination />
-          <button type="submit">Submit</button>
+          <Input
+            label="PickUp Time"
+            type="datetime-local"
+            handleChange={handleChange}
+            name="schedule"
+          />
+          <Type />
+          <div className="mt-[30px] w-[100%] flex justify-center">
+            <button type="submit" className="w-[80%] bg-slate-800 mx-auto border rounded-lg py-[8px] text-[#fff]">
+              Schedule Time at {formData.schedule}
+            </button>
+          </div>
         </form>
       </div>
     </div>

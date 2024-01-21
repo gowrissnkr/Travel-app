@@ -3,39 +3,128 @@ import { data } from "../constants/data";
 
 const PickUp = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    pickup: "",
-    drop: "",
-    dateandTime: "",
-    type: "",
+    customerName: "",
+    customerEmail: "",
+    customerPhone: "",
+    customerPickupLocation: "",
+    customerDropLocation: "",
+    travelDateAndTime: "",
+    travelType: "",
   });
 
+  const [errorData, setErrorData] = useState({});
   const currentDate = new Date()
   currentDate.setHours(currentDate.getHours() + 1)
   const formatedDateAndTime = currentDate.toLocaleString()
   const min = currentDate.toISOString().slice(0,16)
 
-  useEffect(() => {    
+  useEffect(() => {
     setFormData(prevFormData => ({
       ...prevFormData,
-      dateandTime : formatedDateAndTime
+      dateandTime: formatedDateAndTime
     }))
-  },[formatedDateAndTime])
+  }, [formatedDateAndTime])
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+    let errors = {...errorData};
+
+    switch(name){
+      case "customerName": {
+        if(!value){
+          errors.customerName = "Name is required";
+          errors.fillAllFields = 'Please fill all the fields';
+        } else {
+          errors = {}
+        }
+        break;
+      }
+      case "customerEmail": {
+        if(!value){
+          errors.customerEmail = "Email is required";
+          errors.fillAllFields = 'Please fill all the fields';
+        } else {
+          errors = {}
+        }
+        break;
+      }
+      case "customerPhone": {
+        if(!value){
+          errors.customerPhone = "Phone is required";
+          errors.fillAllFields = 'Please fill all the fields';
+        } else {
+          errors = {}
+        }
+        break;
+      }
+      case "customerPickupLocation": {
+        if(!value){
+          errors.customerPickupLocation = "Pickup location is required";
+          errors.fillAllFields = 'Please fill all the fields';
+        } else {
+          errors = {}
+        }
+        break;
+      }
+      case "customerDropLocation": {
+        if(!value){
+          errors.customerDropLocation = "Drop Location is required";
+          errors.fillAllFields = 'Please fill all the fields';
+        } else {
+          errors = {}
+        }
+        break;
+      }
+      case "travelDateAndTime": {
+        if(!value){
+          errors.travelDateAndTime = "Travel Date is required";
+          errors.fillAllFields = 'Please fill all the fields';
+        } else {
+          errors = {}
+        }
+        break;
+      }
+      case "travelType": {
+        if(!value){
+          errors.travelType = "Travel Type is required";
+          errors.fillAllFields = 'Please fill all the fields';
+        } else {
+          errors = {}
+        }
+        break;
+      }
+      default:
+        break;
+    }
+    setErrorData(errors);
+
     setFormData({
-        ...formData,
-        [name] : value
+      ...formData,
+      [name]: value
     });
   };
 
+  const finalValidate = (fieldData) => {
+    let error = {}
+    Object.entries(fieldData).map(function([fieldName, fieldValue]) {
+      if(fieldValue == ""){
+        error.fillAllFields = 'Please fill the required Details';
+      }
+    })
+    if(Object.keys(error).length === 0 && Object.keys(errorData).length === 0){
+      return true;
+    }
+    setErrorData(error);
+    return false;
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(event)
-    console.log(formData)
+    const fieldData = {...formData}
+    let isValidationSuccess = finalValidate(fieldData);
+    if(isValidationSuccess){
+      console.log("no error");
+    }
   };
   return (
     <div className="h-[100vh] w-2/5 p-[20px_10px]">
@@ -72,10 +161,10 @@ const PickUp = () => {
                 type="text"
                 placeholder="FirstName"
                 onChange={handleChange}
-                name="name"
-                value={formData.name}
-                required
+                name="customerName"
+                value={formData.customerName}
               />
+              <div>{errorData && errorData.customerName ? errorData.customerName : ""}</div>
             </div>
           </div>
           <div className="flex items-center justify-between mt-[20px]">
@@ -88,9 +177,10 @@ const PickUp = () => {
                 type="email"
                 placeholder="FirstName"
                 onChange={handleChange}
-                name="email"
-                required
+                name="customerEmail"
+                value={formData.customerEmail}
               />
+              <div>{errorData && errorData.customerEmail ? errorData.customerEmail : ""}</div>
             </div>
           </div>
           <div className="flex items-center justify-between mt-[20px]">
@@ -103,9 +193,10 @@ const PickUp = () => {
                 type="text"
                 placeholder="FirstName"
                 onChange={handleChange}
-                name="phone"
-                required
+                name="customerPhone"
+                value={formData.customerPhone}
               />
+              <div>{errorData && errorData.customerPhone ? errorData.customerPhone : ""}</div>
             </div>
           </div>
           <div className="flex items-center justify-between mt-[20px]">
@@ -118,17 +209,19 @@ const PickUp = () => {
                 type="text"
                 placeholder="FirstName"
                 onChange={handleChange}
-                name="pickup"
-                required
+                name="customerPickupLocation"
+                value={formData.customerPickupLocation}
               />
+              <div>{errorData && errorData.customerPickupLocation ? errorData.customerPickupLocation : ""}</div>
               <input
                 className="border border-solid border-black p-[5px_15px] relative w-full outline-none"
                 type="text"
                 placeholder="FirstName"
                 onChange={handleChange}
-                name="drop"
-                required
+                name="customerDropLocation"
+                value={formData.customerDropLocation}
               />
+              <div>{errorData && errorData.customerDropLocation ? errorData.customerDropLocation : ""}</div>
             </div>
           </div>
           <div className="flex items-center justify-between mt-[20px]">
@@ -141,10 +234,11 @@ const PickUp = () => {
                 type="datetime-local"
                 placeholder="FirstName"
                 onChange={handleChange}
-                name="dateandTime"
+                name="travelDateAndTime"
                 min={min}
-                required
+                value={formData.travelDateAndTime}
               />
+              <div>{errorData && errorData.travelDateAndTime ? errorData.travelDateAndTime : ""}</div>
             </div>
           </div>
           <div className="flex items-center justify-between mt-[20px]">
@@ -157,18 +251,17 @@ const PickUp = () => {
                 type="text"
                 placeholder="FirstName"
                 onChange={handleChange}
-                name="type"
-                required
+                name="travelType"
+                value={formData.travelType}
               />
+              <div>{errorData && errorData.travelType ? errorData.travelType : ""}</div>
             </div>
           </div>
         </div>
-        <button
-        className="bg-blue-500 text-white p-2 rounded"
-        onClick={handleSubmit}
-      >
-        Submit
-      </button>
+        <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+          Submit
+        </button>
+        {errorData ? errorData.fillAllFields : ""}
       </form>
     </div>
   );

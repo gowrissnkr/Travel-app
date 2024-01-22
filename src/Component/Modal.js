@@ -1,53 +1,62 @@
-import React, { useState } from "react";
-
-const Modal = () => {
-  const [modalOpen, setModalOpen] = useState(false);
-
-  
-
+const Modal = ({ handleClose, formData }) => {
   return (
-    <>
-      <div className="container mx-auto py-20">
-        <div
-        //   className={`fixed left-0 top-0 flex h-full min-h-screen w-full items-center justify-center bg-dark/90 px-4 py-5 ${
-        //     modalOpen ? "block" : "hidden"
-        //   }`}
-        >
-          <div
-            onFocus={() => setModalOpen(true)}
-            onBlur={() => setModalOpen(false)}
-            className="w-full max-w-[570px] rounded-[20px] bg-white px-8 py-12 text-center dark:bg-dark-2 md:px-[70px] md:py-[60px]"
-          >
-            <h3 className="pb-[18px] text-xl font-semibold text-dark dark:text-white sm:text-2xl">
-              Your Message Sent Successfully
-            </h3>
-            <span
-              className={`mx-auto mb-6 inline-block h-1 w-[90px] rounded bg-primary`}
-            ></span>
-            <p className="mb-10 text-base leading-relaxed text-body-color dark:text-dark-6">
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since
-            </p>
-            <div className="-mx-3 flex flex-wrap">
-              <div className="w-1/2 px-3">
-                <button
-                  onClick={() => setModalOpen(false)}
-                  className="block w-full rounded-md border border-stroke p-3 text-center text-base font-medium text-dark transition hover:border-red-600 hover:bg-red-600 hover:text-white dark:text-white"
-                >
-                  Cancel
-                </button>
+    <div
+      className="relative z-10"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+      <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+            <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+              <div className="sm:flex sm:items-start">
+                <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                  <h3
+                    className="text-base font-semibold leading-6 text-gray-900"
+                    id="modal-title"
+                  >
+                    Booking Confirmation
+                  </h3>
+                  <div className="mt-2">
+                    <p className="text-sm text-gray-500">
+                      CarType : {formData.carName}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Name : {formData.customerName}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Mobile : {formData.customerPhone}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      PickUp : {formData.customerPickupLocation}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Drop : {formData.customerDropLocation}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Schedule Time :{" "}
+                      {formData.travelDateAndTime.split("T").join(" Time ")}
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="w-1/2 px-3">
-                <button className="block w-full rounded-md border border-primary bg-primary p-3 text-center text-base font-medium text-white transition hover:bg-blue-dark">
-                  <a href={`/#`}> View Details </a>
-                </button>
-              </div>
+            </div>
+            <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+              <button
+                onClick={handleClose}
+                type="button"
+                className="inline-flex w-full justify-center bg-green-400 rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -1,60 +1,137 @@
 import { useEffect, useState } from "react";
 
-export const useForm = (validate) => {
+export const useForm = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    pickup: "",
-    drop: "",
-    schedule: "",
-    type: "",
     carName: "",
-    countryCode: "+91",
+    customerName: "",
+    customerEmail: "",
+    customerPhone: "",
+    customerPickupLocation: "",
+    customerDropLocation: "",
+    travelDateAndTime: "",
+    travelType: "",
   });
 
+  const [errorData, setErrorData] = useState({});
+  const [showModal, setShowModal] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState({});
+
   const currentDate = new Date();
-  currentDate.setHours(currentDate.getHours() + 1);
-  const formatedDateAndTime = currentDate.toISOString().slice(0, 16);
-  const min = formatedDateAndTime.slice(0, -3);
-  console.log(formatedDateAndTime);
+  const oneHourLater = new Date(currentDate.getTime() + 60 * 60 * 1000);
+  const localOneHourLater = new Date(
+    oneHourLater.getTime() - oneHourLater.getTimezoneOffset() * 60000
+  );
+  const formatedDateAndTime = localOneHourLater.toISOString().slice(0, 16);
+  const min = localOneHourLater.toISOString().slice(0, 16);
 
   useEffect(() => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      schedule: formatedDateAndTime,
+      travelDateAndTime: formatedDateAndTime,
     }));
   }, [formatedDateAndTime]);
 
-  const [errors, setErrors] = useState({});
-
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    const { name, value, checked, type } = event.target;
+
+    let errors = { ...errorData };
+
+    switch (type) {
+      case "text":
+      case "email":
+      case "number":
+      case "datetime-local":
+        if (value) {
+          setFormData({
+            ...formData,
+            [name]: value,
+          });
+        } else {
+          errors[name] = `${name} is required`;
+          setFormData({
+            ...formData,
+            [name]: "",
+          });
+        }
+        break;
+
+      case "radio":
+        if (!checked) {
+          errors[name] = `${name} is required`;
+        } else {
+          setFormData({
+            ...formData,
+            [name]: checked ? value : "",
+          });
+        }
+        break;
+      default:
+        break;
+    }
+    setErrorData(errors);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(formData)
+  const finalValidate = (fieldData) => {
+    let error = {};
+    Object.entries(fieldData).forEach(([fieldName, fieldValue]) => {
+      if (fieldValue === "") {
+        error[fieldName] = `Please fill the ${fieldName} Details`;
+      }
+    });
+    return error;
   };
 
   const handleSelectCarType = (carName) => {
-    console.log(carName);
     setFormData((prevFormData) => ({
       ...prevFormData,
       carName: prevFormData.carName === carName ? "" : carName,
     }));
   };
 
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        console.log(position.coords.latitude);
+        console.log(position.coords.longitude);
+        setCurrentLocation((prev) => {
+          prev = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          };
+        });
+      });
+    } else {
+      console.log("Geolocation is not available in the browser");
+    }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const fieldData = { ...formData };
+    let isValidationSuccess = finalValidate(fieldData);
+    if (Object.keys(isValidationSuccess).length === 0) {
+      setErrorData({});
+      setShowModal(true);
+    } else {
+      console.log(isValidationSuccess);
+      setErrorData(isValidationSuccess);
+    }
+  };
+
+  const handleClose = () => {
+    setShowModal(false);
+  };
+
   return {
     handleChange,
     formData,
-    errors,
+    errorData,
     handleSubmit,
     min,
     handleSelectCarType,
+    showModal,
+    handleClose,
+    getCurrentLocation,
+    currentLocation
   };
 };

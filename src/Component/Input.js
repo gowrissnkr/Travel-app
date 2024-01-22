@@ -1,8 +1,9 @@
-const Input = ({ label, type, name, handleChange }) => {
+const Input = ({ label, type, name, handleChange,value,min }) => {
   const inputType = type === "number";
   return (
+    <>
     <div className="flex items-center mb-[15px]">
-      <label className="w-[35%]">{label}</label>
+      <label htmlFor={name} className="w-[35%]">{label}</label>
       {inputType ? (
         <div className="flex w-[65%] gap-1">
           <input
@@ -17,6 +18,7 @@ const Input = ({ label, type, name, handleChange }) => {
             placeholder={label}
             className="w-[85%] p-[2px_10px]"
             name={name}
+            value={value}
             onChange={handleChange}
           />
         </div>
@@ -27,9 +29,12 @@ const Input = ({ label, type, name, handleChange }) => {
           className="w-[65%] p-[2px_10px]"
           name={name}
           onChange={handleChange}
+          value={value}
+          min={min}
         />
       )}
     </div>
+    </>
   );
 };
 

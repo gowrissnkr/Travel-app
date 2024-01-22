@@ -1,6 +1,5 @@
 const CarType = ({ carData, isSelected, handleSelectCarType }) => {
   const { carImgUrl, carName, carType } = carData;
-  console.log(isSelected);
   return (
     <div
       className={`text-center shadow-[0_3px_8px_rgba(0,0,0,0.24)] bg-white ${

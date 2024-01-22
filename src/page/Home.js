@@ -1,16 +1,15 @@
-import Maps from "../Component/Map"
-import Modal from "../Component/Modal"
-import PickUp from "../Component/PickUp"
+import PickUp from "../Component/PickUp";
+import Map from "../Component/Map";
+
 
 const Home = () => {
-    return (
-        <div className="flex w-full">
-            <Maps />
-            <PickUp />
-            {/* <Modal /> */}
+  return (
+    <div className="flex w-full">
+      <Map />
+      <PickUp />
+      
+    </div>
+  );
+};
 
-        </div>
-    )
-}
-
-export default Home
+export default Home;

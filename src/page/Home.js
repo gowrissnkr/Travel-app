@@ -1,14 +1,12 @@
-import Maps from "../Component/Map"
-import PickUp from "../Component/PickUp"
+import PickUp from "../Component/PickUp";
+
 
 const Home = () => {
-    return (
-        <div className="flex w-full">
-            <Maps />
-            <PickUp />
+  return (
+    <div className="flex w-full">
+      <PickUp />
+    </div>
+  );
+};
 
-        </div>
-    )
-}
-
-export default Home
+export default Home;

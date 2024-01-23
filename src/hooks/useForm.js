@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 export const useForm = () => {
+  // Input Form Data
   const [formData, setFormData] = useState({
     carName: "",
     customerName: "",
@@ -12,11 +13,12 @@ export const useForm = () => {
     travelType: "",
   });
 
-  const [errorData, setErrorData] = useState({});
-  const [showModal, setShowModal] = useState(false);
-  const [customerPickupLatLng, setCustomerPickupLatLng] = useState({});
-  const [customerDropLatLng, setCustomerDropLatLng] = useState({});
+  const [errorData, setErrorData] = useState({}); // Form Error Data
+  const [showModal, setShowModal] = useState(false); // Modal show/hide State
+  const [customerPickupLatLng, setCustomerPickupLatLng] = useState({}); // CustomerPickUpLocation
+  const [customerDropLatLng, setCustomerDropLatLng] = useState({}); // CustomerDropLocation
 
+  // Get Current Date and sets the Date to after One Hour
   const currentDate = new Date();
   const oneHourLater = new Date(currentDate.getTime() + 60 * 60 * 1000);
   const localOneHourLater = new Date(
@@ -25,6 +27,7 @@ export const useForm = () => {
   const formatedDateAndTime = localOneHourLater.toISOString().slice(0, 16);
   const min = localOneHourLater.toISOString().slice(0, 16);
 
+  // Initial Run for Date
   useEffect(() => {
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -32,6 +35,7 @@ export const useForm = () => {
     }));
   }, [formatedDateAndTime]);
 
+  // Handle Input Change
   const handleChange = async (event) => {
     const { name, value, checked, type } = event.target;
 
@@ -93,6 +97,7 @@ export const useForm = () => {
     setErrorData(errors);
   };
 
+  // Handling Validation
   const finalValidate = (fieldData) => {
     let error = {};
     Object.entries(fieldData).forEach(([fieldName, fieldValue]) => {
@@ -103,6 +108,7 @@ export const useForm = () => {
     return error;
   };
 
+  // Selecting Car type
   const handleSelectCarType = (carName) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -110,6 +116,7 @@ export const useForm = () => {
     }));
   };
 
+  // Get Current Location
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -143,6 +150,7 @@ export const useForm = () => {
     }
   };
 
+  // Drop Location Function
   const getDropLocation = async (location, name) => {
     console.log("name", name);
     const geocoder = new window.google.maps.Geocoder();
@@ -174,6 +182,7 @@ export const useForm = () => {
     });
   };
 
+  // Submitting Form Data function
   const handleSubmit = (event) => {
     event.preventDefault();
     const fieldData = { ...formData };
@@ -186,6 +195,7 @@ export const useForm = () => {
     }
   };
 
+  // Close the Modal Function
   const handleClose = () => {
     setShowModal(false);
   };

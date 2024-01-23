@@ -5,7 +5,7 @@ import Input from "./Input";
 import Destination from "./Destination";
 import Type from "./Type";
 import Modal from "./Modal";
-import { useEffect } from "react";
+import Map from "./Map";
 
 const PickUp = () => {
   const {
@@ -17,13 +17,17 @@ const PickUp = () => {
     handleClose,
     min,
     errorData,
-    getCurrentLocation
+    getCurrentLocation,
+    customerPickupLatLng,
+    customerDropLatLng,
   } = useForm();
 
-  useEffect(() => {}, [errorData]);
-  console.log(errorData)
   return (
     <>
+      <Map
+        customerPickupLocation={customerPickupLatLng}
+        customerDropLocation={customerDropLatLng}
+      />
       <div className="bg-gray-300 w-[40%]">
         <div className="w-[full] mt-[10px] px-[10px] ">
           <div className="flex items-center justify-between">
@@ -65,7 +69,11 @@ const PickUp = () => {
               name="customerPhone"
               value={formData.customerPhone}
             />
-            <Destination handleChange={handleChange} formData={formData} getCurrentLocation={getCurrentLocation}/>
+            <Destination
+              handleChange={handleChange}
+              formData={formData}
+              getCurrentLocation={getCurrentLocation}
+            />
             <Input
               label="PickUp Time"
               type="datetime-local"
@@ -77,7 +85,7 @@ const PickUp = () => {
             <Type handleChange={handleChange} />
             <div className="my-[10px] text-center">
               {Object.keys(errorData).length > 0 && (
-                <h5 className="text-[red]">Please Fill the required Details</h5>
+                <h5 className="text-[red]">{errorData && (errorData.fieldError || errorData.phoneError || '') }</h5>
               )}
             </div>
             <div className="mt-[30px] w-[100%] flex justify-center">
@@ -85,15 +93,21 @@ const PickUp = () => {
                 type="submit"
                 className="w-[80%] bg-slate-800 mx-auto border rounded-lg py-[8px] text-[#fff]"
               >
-                Schedule Time at {formData.travelType && formData.travelDateAndTime ? formData.travelDateAndTime : ""}
+                Schedule Time at{" "}
+                {formData.travelType && formData.travelDateAndTime
+                  ? formData.travelDateAndTime
+                  : ""}
               </button>
             </div>
           </form>
         </div>
       </div>
-      {showModal ? <Modal handleClose={handleClose} formData= {formData} /> : <></>}
+      {showModal ? (
+        <Modal handleClose={handleClose} formData={formData} />
+      ) : (
+        <></>
+      )}
     </>
   );
 };
-
 export default PickUp;

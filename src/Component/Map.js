@@ -1,10 +1,11 @@
 import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
 import { useEffect } from "react";
+import {MAP_API_KEY } from "../constants/apiKey"
 
 const center = { lat: 11.0168, lng: 76.9558 };
 const Map = ({ customerPickupLocation, customerDropLocation }) => {
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.MAP_API_KEY,
+    googleMapsApiKey: MAP_API_KEY,
   });
 
   useEffect(() => {

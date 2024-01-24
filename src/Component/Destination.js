@@ -62,8 +62,6 @@ const Destination = ({ handleChange, formData, getCurrentLocation }) => {
 
   const handleDropInput = (e) => {
     setDropValue(e.target.value);
-    console.log(e.target.value);
-    console.log(formData.customerDropLocation);
     handleChange({
       target: {
         name: "customerDropLocation",

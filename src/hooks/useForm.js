@@ -123,7 +123,6 @@ export const useForm = () => {
           if (status === "OK") {
             if (results[0]) {
               const address = results[0].formatted_address;
-              console.log(address);
               setFormData((prevFormData) => ({
                 ...prevFormData,
                 customerPickupLocation: address,

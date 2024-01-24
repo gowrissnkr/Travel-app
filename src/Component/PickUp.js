@@ -7,6 +7,7 @@ import Type from "./Type";
 import Modal from "./Modal";
 import Map from "./Map";
 
+
 const PickUp = () => {
   const {
     handleSelectCarType,
@@ -73,6 +74,7 @@ const PickUp = () => {
               handleChange={handleChange}
               formData={formData}
               getCurrentLocation={getCurrentLocation}
+              // getLocationDetails = {getLocationDetails}
             />
             <Input
               label="PickUp Time"

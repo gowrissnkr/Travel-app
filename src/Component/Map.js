@@ -1,18 +1,42 @@
-import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
-import { useEffect } from "react";
+import {
+  GoogleMap,
+  MarkerF,
+  useLoadScript,
+  DirectionsRenderer,
+} from "@react-google-maps/api";
+import { useEffect, useState } from "react";
 
 const center = { lat: 11.0168, lng: 76.9558 };
+
 const Map = ({ customerPickupLocation, customerDropLocation }) => {
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.MAP_API_KEY,
-  });
+  const [directionsResponse, setDirectionsResponse] = useState(null);
+
+  const calculateRoute = async () => {
+    if (!customerPickupLocation || !customerDropLocation) {
+      setDirectionsResponse(null);
+      return;
+    }
+    // eslint-disable-next-line no-undef
+    const directionsService = new google.maps.DirectionsService();
+    const results = await directionsService.route({
+      origin: customerPickupLocation,
+      destination: customerDropLocation,
+      // eslint-disable-next-line no-undef
+      travelMode: google.maps.TravelMode.DRIVING,
+    });
+    setDirectionsResponse(results);
+  };
 
   useEffect(() => {
-    console.log(customerPickupLocation,customerDropLocation);
-
-  }, [customerPickupLocation,customerDropLocation]);
-
-  if (!isLoaded) return <h1>Loading...</h1>;
+    if (
+      Object.keys(customerDropLocation).length > 0 &&
+      Object.keys(customerPickupLocation).length > 0
+    ) {
+      calculateRoute();
+    } else {
+      setDirectionsResponse(null);
+    }
+  }, [customerPickupLocation, customerDropLocation]);
   return (
     <div className="map">
       <GoogleMap
@@ -20,11 +44,16 @@ const Map = ({ customerPickupLocation, customerDropLocation }) => {
         zoom={10}
         center={center}
       >
-        {customerPickupLocation && Object.keys(customerPickupLocation).length > 0 && (
-          <MarkerF position={customerPickupLocation} />
-        )}
-        {customerDropLocation && Object.keys(customerDropLocation).length > 0 && (
-          <MarkerF position={customerDropLocation} />
+        {customerPickupLocation &&
+          Object.keys(customerPickupLocation).length > 0 && (
+            <MarkerF position={customerPickupLocation} />
+          )}
+        {customerDropLocation &&
+          Object.keys(customerDropLocation).length > 0 && (
+            <MarkerF position={customerDropLocation} />
+          )}
+        {directionsResponse && (
+          <DirectionsRenderer directions={directionsResponse} />
         )}
       </GoogleMap>
     </div>

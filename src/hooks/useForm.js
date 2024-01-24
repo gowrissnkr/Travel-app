@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 export const useForm = () => {
+  // Input Form Data
   const [formData, setFormData] = useState({
     carName: "",
     customerName: "",
@@ -12,11 +13,12 @@ export const useForm = () => {
     travelType: "",
   });
 
-  const [errorData, setErrorData] = useState({});
-  const [showModal, setShowModal] = useState(false);
-  const [customerPickupLatLng, setCustomerPickupLatLng] = useState({});
-  const [customerDropLatLng, setCustomerDropLatLng] = useState({});
+  const [errorData, setErrorData] = useState({}); // Form Error Data
+  const [showModal, setShowModal] = useState(false); // Modal show/hide State
+  const [customerPickupLatLng, setCustomerPickupLatLng] = useState({}); // CustomerPickUpLocation
+  const [customerDropLatLng, setCustomerDropLatLng] = useState({}); // CustomerDropLocation
 
+  // Get Current Date and sets the Date to after One Hour
   const currentDate = new Date();
   const oneHourLater = new Date(currentDate.getTime() + 60 * 60 * 1000);
   const localOneHourLater = new Date(
@@ -25,6 +27,7 @@ export const useForm = () => {
   const formatedDateAndTime = localOneHourLater.toISOString().slice(0, 16);
   const min = localOneHourLater.toISOString().slice(0, 16);
 
+  // Initial Run for Date
   useEffect(() => {
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -32,20 +35,23 @@ export const useForm = () => {
     }));
   }, [formatedDateAndTime]);
 
-  const handleChange = async (event) => {
-    const { name, value, checked, type } = event.target;
+  const handleFormData = (name, value) => {
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
+  // Handle Input Change
+  const handleChange = async ({ target }) => {
+    const { name, value, checked, type } = target;
     let errors = { ...errorData };
-
     switch (type) {
       case "text":
       case "email":
       case "datetime-local":
         if (value) {
-          setFormData({
-            ...formData,
-            [name]: value,
-          });
+          handleFormData(name, value);
           if (
             name === "customerDropLocation" ||
             name === "customerPickupLocation"
@@ -54,23 +60,14 @@ export const useForm = () => {
           }
           errors["fieldError"] = "";
         } else {
-          setFormData({
-            ...formData,
-            [name]: "",
-          });
+          handleFormData(name, "");
         }
         break;
       case "number":
         if (value) {
-          setFormData({
-            ...formData,
-            [name]: value,
-          });
+          handleFormData(name, value);
         } else {
-          setFormData({
-            ...formData,
-            [name]: "",
-          });
+          handleFormData(name, "");
         }
         if (value && value.toString().length !== 10) {
           errors["phoneError"] = `Phone number must be 10 digits`;
@@ -81,10 +78,7 @@ export const useForm = () => {
 
       case "radio":
         if (checked) {
-          setFormData({
-            ...formData,
-            [name]: checked ? value : "",
-          });
+          handleFormData(name, checked ? value : "");
         }
         break;
       default:
@@ -93,6 +87,7 @@ export const useForm = () => {
     setErrorData(errors);
   };
 
+  // Handling Validation
   const finalValidate = (fieldData) => {
     let error = {};
     Object.entries(fieldData).forEach(([fieldName, fieldValue]) => {
@@ -103,6 +98,7 @@ export const useForm = () => {
     return error;
   };
 
+  // Selecting Car type
   const handleSelectCarType = (carName) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -110,6 +106,7 @@ export const useForm = () => {
     }));
   };
 
+  // Get Current Location
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -126,6 +123,7 @@ export const useForm = () => {
           if (status === "OK") {
             if (results[0]) {
               const address = results[0].formatted_address;
+              console.log(address);
               setFormData((prevFormData) => ({
                 ...prevFormData,
                 customerPickupLocation: address,
@@ -143,8 +141,8 @@ export const useForm = () => {
     }
   };
 
+  // Drop Location Function
   const getDropLocation = async (location, name) => {
-    console.log("name", name);
     const geocoder = new window.google.maps.Geocoder();
     geocoder.geocode({ address: location }, (results, status) => {
       if (status === "OK") {
@@ -174,6 +172,7 @@ export const useForm = () => {
     });
   };
 
+  // Submitting Form Data function
   const handleSubmit = (event) => {
     event.preventDefault();
     const fieldData = { ...formData };
@@ -186,6 +185,7 @@ export const useForm = () => {
     }
   };
 
+  // Close the Modal Function
   const handleClose = () => {
     setShowModal(false);
   };
